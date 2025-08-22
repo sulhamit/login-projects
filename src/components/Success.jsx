@@ -1,7 +1,14 @@
+import { useHistory } from "react-router-dom";
+import { Button } from "reactstrap";
+
 export default function Success() {
 
+    function handleTurnBack() {
+        const history = useHistory();
+        history.push("/");
+    }
     return (
-        <div className="success-container">
-            <h1>Registration Successful!</h1>
-            <p>Thank you for registering. You can now log in.</p>   </div>)
+        <div >
+            <h1>Login Successful!</h1>
+            <Button className="w-100" onClick={handleTurnBack}>Turn Back</Button>   </div>)
 }

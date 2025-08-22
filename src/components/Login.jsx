@@ -1,7 +1,7 @@
-
 import { Button, Card, CardBody, CardTitle, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const initialForm = {
     email: '',
@@ -19,10 +19,10 @@ export default function Login() {
     const [error, setError] = useState({
         email: false,
         password: false,
-        terms: false
+        terms: true
     });
 
-
+    const history = useHistory();
     const validateEmail = (email) => {
         return String(email)
             .toLowerCase()
@@ -31,7 +31,7 @@ export default function Login() {
             );
     };
     function validatePassword(str) {
-        let re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+        let re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
         return re.test(str);
     }
 
@@ -66,6 +66,7 @@ export default function Login() {
             }
         }
     }
+
     useEffect(() => {
         if (form.email.trim() !== '' && form.password.trim() !== '' && form.terms && validateEmail(form.email) && validatePassword(form.password)) {
             setIsValid(true);
@@ -78,6 +79,7 @@ export default function Login() {
         e.preventDefault();
         console.log("Form submitted:", form);
         setForm(initialForm);
+        history.push("/success");
     }
 
 
@@ -91,7 +93,7 @@ export default function Login() {
             }}>
             <CardBody>
                 <CardTitle tag="h2">
-                    Register
+                    Login
                 </CardTitle>
                 <Form onSubmit={handleSubmit}>
                     <FormGroup>
@@ -108,11 +110,14 @@ export default function Login() {
                             value={form.email}
                             invalid={error.email && form.email !== ''}
                             valid={form.email.trim() !== '' && !error.email}
+                            data-cy="email-input"
 
                         />
-                        <FormFeedback>
-                            {error.email && errorMessages.email}
-                        </FormFeedback>
+                        {error.email && (
+                            <FormFeedback data-cy="error-message">
+                                {errorMessages.email}
+                            </FormFeedback>
+                        )}
                     </FormGroup>
                     <br />
                     <FormGroup>
@@ -129,11 +134,14 @@ export default function Login() {
                             onChange={handleChange}
                             invalid={error.password && form.password !== ''}
                             valid={form.password.trim() !== '' && !error.password}
+                            data-cy="password-input"
 
                         />
-                        <FormFeedback>
-                            {error.password && errorMessages.password}
-                        </FormFeedback>
+                        {error.password && (
+                            <FormFeedback data-cy="error-message">
+                                {errorMessages.password}
+                            </FormFeedback>
+                        )}
                     </FormGroup>
 
                     <FormGroup check>
@@ -145,17 +153,22 @@ export default function Login() {
                             invalid={error.terms}
                             checked={form.terms}
                             onChange={handleChange}
+                            data-cy="terms-checkbox"
                         />
                         {' '}
                         <Label htmlFor="terms">
                             Check me out
                         </Label>
                         {' '}
-                        <FormFeedback>
-                            {error.terms && errorMessages.terms}
-                        </FormFeedback>
+                        {error.terms && (
+                            <FormFeedback data-cy="error-message">
+                                {errorMessages.terms}
+                            </FormFeedback>
+                        )}
+
+
                     </FormGroup>
-                    <Button disabled={!isValid} type="submit" color="primary" className="w-100">
+                    <Button disabled={!isValid} type="submit" color="primary" className="w-100" data-cy="submit-button">
                         Submit
                     </Button>
                 </Form>
